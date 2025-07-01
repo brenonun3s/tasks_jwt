@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("tasks")
 @RequiredArgsConstructor
 @Api(value = "Task Controller", tags = "Tasks")
 public class TaskController {

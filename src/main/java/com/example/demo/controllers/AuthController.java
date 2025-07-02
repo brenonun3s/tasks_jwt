@@ -15,22 +15,22 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("users")
-public class UserController {
+@RequestMapping("/auth")
+public class AuthController {
 
  private final UserService userService;
-
- @PostMapping("/auth/register")
+ 
+ @PostMapping("/register")
  public UserResponseDTO register(@RequestBody @Valid UserRegisterDTO dto) {
   return userService.register(dto);
  }
 
- @PostMapping("/auth/login")
+ @PostMapping("/login")
  public String gerarToken(@RequestBody @Valid UserLoginDTO dto) {
   return userService.login(dto);
  }
 
- @PostMapping("/auth/refresh")
+ @PostMapping("/refresh")
  public String refreshToken(@RequestBody String token) {
   return userService.refreshToken(token);
  }

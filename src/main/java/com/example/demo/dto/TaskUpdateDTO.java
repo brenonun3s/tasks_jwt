@@ -1,6 +1,9 @@
 package com.example.demo.dto;
 
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +15,7 @@ public record TaskUpdateDTO(
 
   @NotBlank(message = "Description is required") @Size(min = 5, max = 150, message = "The description must be between 5 and 150 characters long.") String description,
 
+  @JsonFormat(pattern = "dd-MM-yyyy")
   @FutureOrPresent(message = "Due date must be today or in the future") LocalDate dueDate,
 
   @NotNull(message = "Completed field is required") Boolean completed

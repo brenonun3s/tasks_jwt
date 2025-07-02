@@ -42,4 +42,14 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
   }
 
+  @ExceptionHandler(OperationException.class)
+  public ResponseEntity<Object> handleOperacao(OperationException ex) {
+      Map<String, Object> response = new HashMap<>();
+      response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+      response.put("timestamp", LocalDateTime.now());
+      response.put("message", "Internal error: " + ex.getMessage());
+  
+      return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
 }

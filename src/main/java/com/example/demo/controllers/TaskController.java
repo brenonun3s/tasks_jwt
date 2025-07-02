@@ -41,18 +41,18 @@ public class TaskController {
  }
 
  @PostMapping
- public TaskResponseDTO criar(@RequestBody @Valid TaskDTO dto) {
-  return service.criar(dto);
+ public TaskResponseDTO createTask(@RequestBody @Valid TaskDTO dto) {
+  return service.create(dto);
  }
 
  @PutMapping("/{id}")
- public TaskResponseDTO update(@PathVariable Long id, @RequestBody @Valid TaskUpdateDTO dto) {
+ public TaskResponseDTO updateTask(@PathVariable Long id, @RequestBody @Valid TaskUpdateDTO dto) {
   return service.update(id, dto);
  }
 
  @DeleteMapping("/{id}")
- public void deletar(@PathVariable Long id) {
-  service.deletar(id);
+ public void deleteTask(@PathVariable Long id) {
+  service.delete(id);
  }
 
 }

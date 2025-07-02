@@ -4,64 +4,125 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.TaskDTO;
 import com.example.demo.dto.TaskResponseDTO;
 import com.example.demo.dto.TaskUpdateDTO;
+import com.example.demo.exceptions.OperationException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.mapper.TaskMapper;
 import com.example.demo.model.Task;
 import com.example.demo.repository.TaskRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TaskService {
 
   private final TaskRepository taskRepository;
   private final TaskMapper taskMapper;
 
+  @Transactional(readOnly = true)
   public List<TaskResponseDTO> listar() {
-    List<Task> tasks = taskRepository.findAll();
+    try {
+      List<Task> tasks = taskRepository.findAll();
 
-    if (tasks.isEmpty()) {
-      throw new ResourceNotFoundException("No tasks found");
+      if (tasks.isEmpty()) {
+        throw new ResourceNotFoundException("No tasks found");
+      }
+
+      return tasks.stream()
+          .map(taskMapper::toResponseDto)
+          .collect(Collectors.toList());
+
+    } catch (ResourceNotFoundException e) {
+      throw e;
+    } catch (DataAccessException e) {
+      log.error("Error accessing database to list tasks", e);
+      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+    } catch (Exception e) {
+      log.error("Unexpected error", e);
+      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
     }
-
-    return tasks.stream()
-        .map(taskMapper::toResponseDto)
-        .collect(Collectors.toList());
   }
 
+  @Transactional(readOnly = true)
   public TaskResponseDTO findById(Long id) {
-    Task task = taskRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Task not found with ID: " + id));
-    return taskMapper.toResponseDto(task);
-  }
-
-  public TaskResponseDTO criar(TaskDTO dto) {
-    Task task = taskMapper.toEntity(dto);
-    task.setDateCreation(LocalDate.now());
-    task.setCompleted(false);
-    Task saved = taskRepository.save(task);
-    return taskMapper.toResponseDto(saved);
-  }
-
-  public TaskResponseDTO update(Long id, TaskUpdateDTO dto) {
-    Task task = taskRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Task not found with ID: " + id));
-    taskMapper.updateEntityFromDto(dto, task);
-    Task updated = taskRepository.save(task);
-    return taskMapper.toResponseDto(updated);
-  }
-
-  public void deletar(Long id) {
-    if (!taskRepository.existsById(id)) {
-      throw new EntityNotFoundException("Task not found with ID: " + id);
+    try {
+      Task task = taskRepository.findById(id)
+          .orElseThrow(() -> new ResourceNotFoundException("Task not found with ID: " + id));
+      return taskMapper.toResponseDto(task);
+    } catch (ResourceNotFoundException e) {
+      throw e;
+    } catch (DataAccessException e) {
+      log.error("Error accessing database to list tasks", e);
+      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+    } catch (Exception e) {
+      log.error("Unexpected error", e);
+      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
     }
-    taskRepository.deleteById(id);
+
+  }
+
+  @Transactional
+  public TaskResponseDTO create(TaskDTO dto) {
+    try {
+      Task task = taskMapper.toEntity(dto);
+      task.setDateCreation(LocalDate.now());
+      task.setCompleted(false);
+      Task saved = taskRepository.save(task);
+      return taskMapper.toResponseDto(saved);
+    } catch (ResourceNotFoundException e) {
+      throw e;
+    } catch (DataAccessException e) {
+      log.error("Error accessing database to insert task", e);
+      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+    } catch (Exception e) {
+      log.error("Unexpected error", e);
+      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+    }
+  }
+
+  @Transactional
+  public TaskResponseDTO update(Long id, TaskUpdateDTO dto) {
+    try {
+      Task task = taskRepository.findById(id)
+          .orElseThrow(() -> new ResourceNotFoundException("Task not found with ID: " + id));
+      taskMapper.updateEntityFromDto(dto, task);
+      Task updated = taskRepository.save(task);
+      return taskMapper.toResponseDto(updated);
+    } catch (ResourceNotFoundException e) {
+      throw e;
+    } catch (DataAccessException e) {
+      log.error("Error accessing database to update task", e);
+      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+    } catch (Exception e) {
+      log.error("Unexpected error", e);
+      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+    }
+  }
+
+  @Transactional
+  public void delete(Long id) {
+    try {
+      if (!taskRepository.existsById(id)) {
+        throw new ResourceNotFoundException("Task not found with ID: " + id);
+      }
+      taskRepository.deleteById(id);
+    } catch (ResourceNotFoundException e) {
+      throw e;
+    } catch (DataAccessException e) {
+      log.error("Error accessing database to delete task", e);
+      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+    } catch (Exception e) {
+      log.error("Unexpected error", e);
+      throw new OperationException("Error deleting task! Contact Developer or IT Support", e);
+    }
   }
 }

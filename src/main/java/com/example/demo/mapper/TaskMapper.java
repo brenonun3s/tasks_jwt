@@ -14,13 +14,13 @@ public interface TaskMapper {
 
  @Mapping(target = "completed", ignore = true)
  @Mapping(target = "dateCreation", ignore = true)
- @Mapping(target = "usuario", ignore = true)
+ @Mapping(target = "user", ignore = true)
  @Mapping(target = "id", ignore = true)
  Task toEntity(TaskDTO dto);
 
  @Mapping(target = "id", ignore = true)
  @Mapping(target = "dateCreation", ignore = true)
- @Mapping(target = "usuario", ignore = true)
+ @Mapping(target = "user", ignore = true)
  void updateEntityFromDto(TaskUpdateDTO dto, @MappingTarget Task entity);
 
  @Mapping(source = "dateCreation", target = "createdAt")

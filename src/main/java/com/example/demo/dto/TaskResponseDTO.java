@@ -9,6 +9,7 @@ public record TaskResponseDTO(
   String description,
   LocalDate dueDate,
   Boolean completed,
+  UserResponseDTO user,
   LocalDateTime createdAt ) {
 
 }

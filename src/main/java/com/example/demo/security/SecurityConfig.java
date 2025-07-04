@@ -20,9 +20,18 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
+    .headers(headers -> headers.frameOptions().disable())
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/auth/**").permitAll()
+            .requestMatchers("/h2-console/**").permitAll()
+            .requestMatchers(
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/swagger-resources/**",
+                "/webjars/**")
+            .permitAll()
+
             .anyRequest().authenticated()
 
         )

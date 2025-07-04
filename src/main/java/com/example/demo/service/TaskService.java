@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +17,9 @@ import com.example.demo.exceptions.OperationException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.mapper.TaskMapper;
 import com.example.demo.model.Task;
+import com.example.demo.model.User;
 import com.example.demo.repository.TaskRepository;
+import com.example.demo.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +31,18 @@ public class TaskService {
 
   private final TaskRepository taskRepository;
   private final TaskMapper taskMapper;
+  private final UserRepository userRepository;
 
   @Transactional(readOnly = true)
   public List<TaskResponseDTO> listar() {
     try {
-      List<Task> tasks = taskRepository.findAll();
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      String email = auth.getName();
 
-      if (tasks.isEmpty()) {
-        throw new ResourceNotFoundException("No tasks found");
-      }
+      User user = userRepository.findByEmail(email)
+          .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+
+      List<Task> tasks = taskRepository.findByUser(user);
 
       return tasks.stream()
           .map(taskMapper::toResponseDto)
@@ -73,9 +80,17 @@ public class TaskService {
   @Transactional
   public TaskResponseDTO create(TaskDTO dto) {
     try {
+
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      String email = authentication.getName();
+
+      User user = userRepository.findByEmail(email)
+          .orElseThrow(() -> new RuntimeException("User not found!"));
+
       Task task = taskMapper.toEntity(dto);
       task.setDateCreation(LocalDate.now());
       task.setCompleted(false);
+      task.setUser(user);
       Task saved = taskRepository.save(task);
       return taskMapper.toResponseDto(saved);
     } catch (ResourceNotFoundException e) {

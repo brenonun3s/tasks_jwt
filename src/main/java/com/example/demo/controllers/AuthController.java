@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.TokenJWTDTO;
 import com.example.demo.dto.UserLoginDTO;
 import com.example.demo.dto.UserRegisterDTO;
 import com.example.demo.dto.UserResponseDTO;
@@ -31,7 +32,7 @@ public class AuthController {
  }
 
  @PostMapping("/refresh")
- public String refreshToken(@RequestBody String token) {
-  return userService.refreshToken(token);
+ public String refreshToken(@RequestBody TokenJWTDTO dto) {
+  return userService.refreshToken(dto.tokenAntigo());
  }
 }

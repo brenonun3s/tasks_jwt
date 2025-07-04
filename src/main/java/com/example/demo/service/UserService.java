@@ -1,8 +1,5 @@
 package com.example.demo.service;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +24,6 @@ public class UserService implements UserDetailsService {
   private final UserRepository userRepository;
   private final UserMapper userMapper;
   private final PasswordEncoder encoder;
-  private final AuthenticationManager authManager;
   private final JwtUtil jwtUtil;
 
   public UserResponseDTO register(UserRegisterDTO dto) {
@@ -36,21 +32,19 @@ public class UserService implements UserDetailsService {
     }
 
     User user = userMapper.toEntity(dto);
-    user.setPassword(encoder.encode(dto.password())); 
+    user.setPassword(encoder.encode(dto.password()));
 
     User saved = userRepository.save(user);
     return userMapper.toResponseDto(saved);
   }
 
   public String login(UserLoginDTO dto) {
-    Authentication auth = authManager.authenticate(
-        new UsernamePasswordAuthenticationToken(dto.email(), dto.password())
-    );
+    UserDetails userDetails = loadUserByUsername(dto.email());
 
-    if (auth.isAuthenticated()) {
+    if (encoder.matches(dto.password(), userDetails.getPassword())) {
       return jwtUtil.generateToken(dto.email());
-    }
 
+    }
     throw new RuntimeException("Invalid credentials");
   }
 

@@ -17,21 +17,19 @@ import com.example.demo.dto.TaskResponseDTO;
 import com.example.demo.dto.TaskUpdateDTO;
 import com.example.demo.service.TaskService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("tasks")
 @RequiredArgsConstructor
-@Api(value = "Task Controller", tags = "Tasks")
+//@(value = "Task Controller", tags = "Tasks")
 public class TaskController {
 
  private final TaskService service;
 
  @GetMapping
- @ApiOperation(value = "Find All Tasks", notes = "This endpoint return all tasks registers")
+ //@ApiOperation(value = "Find All Tasks", notes = "This endpoint return all tasks registers")
  public List<TaskResponseDTO> listar() {
    return service.listar();
  }

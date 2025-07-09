@@ -6,15 +6,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.config.security.JwtUtil;
 import com.example.demo.dto.UserLoginDTO;
 import com.example.demo.dto.UserRegisterDTO;
 import com.example.demo.dto.UserResponseDTO;
+import com.example.demo.exception.EmailAlreadyExistsException;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.security.JwtUtil;
 
-import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
 
   public UserResponseDTO register(UserRegisterDTO dto) {
     if (userRepository.existsByEmail(dto.email())) {
-      throw new EntityExistsException("Email already in use");
+      throw new EmailAlreadyExistsException("Email already in use");
     }
 
     User user = userMapper.toEntity(dto);

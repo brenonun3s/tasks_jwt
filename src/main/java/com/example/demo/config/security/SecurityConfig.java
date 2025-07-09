@@ -1,4 +1,4 @@
-package com.example.demo.security;
+package com.example.demo.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,17 +20,18 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
-    .headers(headers -> headers.frameOptions().disable())
+        .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/auth/**").permitAll()
-            .requestMatchers("/h2-console/**").permitAll()
             .requestMatchers(
+                "/auth/register",
+                "/auth/login",
                 "/swagger-ui/**",
                 "/v3/api-docs/**",
-                "/v3/api-docs/",
                 "/swagger-resources/**",
-                "/webjars/**")
+                "/swagger-ui.html",
+                "/webjars/**",
+                "/h2-console/**")
             .permitAll()
 
             .anyRequest().authenticated()

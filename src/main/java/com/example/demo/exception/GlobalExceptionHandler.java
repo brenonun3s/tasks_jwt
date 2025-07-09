@@ -1,4 +1,4 @@
-package com.example.demo.exceptions;
+package com.example.demo.exception;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -50,6 +50,13 @@ public class GlobalExceptionHandler {
       response.put("message", "Internal error: " + ex.getMessage());
   
       return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+  
+  @ExceptionHandler(EmailAlreadyExistsException.class)
+  public ResponseEntity<String> handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
+      return ResponseEntity
+          .status(HttpStatus.CONFLICT)
+          .body(ex.getMessage());
   }
 
   

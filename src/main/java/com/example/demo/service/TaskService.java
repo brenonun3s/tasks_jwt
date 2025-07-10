@@ -51,11 +51,13 @@ public class TaskService {
     } catch (ResourceNotFoundException e) {
       throw e;
     } catch (DataAccessException e) {
-      log.error("Error accessing database to list tasks", e);
-      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+      log.error("Erro ao acessar o banco de dados para listar tarefas", e);
+      throw new OperationException("Erro ao procurar tarefas! Entre em contato com o desenvolvedor ou o suporte de TI.",
+          e);
     } catch (Exception e) {
-      log.error("Unexpected error", e);
-      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+      log.error("Erro Inesperado", e);
+      throw new OperationException("Erro ao procurar tarefas! Entre em contato com o desenvolvedor ou o suporte de TI.",
+          e);
     }
   }
 
@@ -63,16 +65,18 @@ public class TaskService {
   public TaskResponseDTO findById(Long id) {
     try {
       Task task = taskRepository.findById(id)
-          .orElseThrow(() -> new ResourceNotFoundException("Task not found with ID: " + id));
+          .orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada com esse ID " + id));
       return taskMapper.toResponseDto(task);
     } catch (ResourceNotFoundException e) {
       throw e;
     } catch (DataAccessException e) {
-      log.error("Error accessing database to list tasks", e);
-      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+      log.error("Erro ao acessar o banco de dados para listar tarefas", e);
+      throw new OperationException("Erro ao procurar tarefas! Entre em contato com o desenvolvedor ou o suporte de TI.",
+          e);
     } catch (Exception e) {
-      log.error("Unexpected error", e);
-      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+      log.error("Erro Inesperado", e);
+      throw new OperationException("Erro ao procurar tarefas! Entre em contato com o desenvolvedor ou o suporte de TI.",
+          e);
     }
 
   }
@@ -85,7 +89,7 @@ public class TaskService {
       String email = authentication.getName();
 
       User user = userRepository.findByEmail(email)
-          .orElseThrow(() -> new RuntimeException("User not found!"));
+          .orElseThrow(() -> new RuntimeException("Usuário não localizado"));
 
       Task task = taskMapper.toEntity(dto);
       task.setDateCreation(LocalDate.now());
@@ -96,11 +100,13 @@ public class TaskService {
     } catch (ResourceNotFoundException e) {
       throw e;
     } catch (DataAccessException e) {
-      log.error("Error accessing database to insert task", e);
-      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+      log.error("Erro ao acessar o banco de dados para listar tarefas", e);
+      throw new OperationException("Erro ao procurar tarefas! Entre em contato com o desenvolvedor ou o suporte de TI.",
+          e);
     } catch (Exception e) {
       log.error("Unexpected error", e);
-      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+      throw new OperationException("Erro ao procurar tarefas! Entre em contato com o desenvolvedor ou o suporte de TI.",
+          e);
     }
   }
 
@@ -108,18 +114,20 @@ public class TaskService {
   public TaskResponseDTO update(Long id, TaskUpdateDTO dto) {
     try {
       Task task = taskRepository.findById(id)
-          .orElseThrow(() -> new ResourceNotFoundException("Task not found with ID: " + id));
+          .orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada com esse ID : " + id));
       taskMapper.updateEntityFromDto(dto, task);
       Task updated = taskRepository.save(task);
       return taskMapper.toResponseDto(updated);
     } catch (ResourceNotFoundException e) {
       throw e;
     } catch (DataAccessException e) {
-      log.error("Error accessing database to update task", e);
-      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+      log.error("Erro ao acessar o banco de dados para listar tarefas", e);
+      throw new OperationException("Erro ao procurar tarefas! Entre em contato com o desenvolvedor ou o suporte de TI.",
+          e);
     } catch (Exception e) {
       log.error("Unexpected error", e);
-      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+      throw new OperationException("Erro ao procurar tarefas! Entre em contato com o desenvolvedor ou o suporte de TI.",
+          e);
     }
   }
 
@@ -127,17 +135,19 @@ public class TaskService {
   public void delete(Long id) {
     try {
       if (!taskRepository.existsById(id)) {
-        throw new ResourceNotFoundException("Task not found with ID: " + id);
+        throw new ResourceNotFoundException("Tarefa não encontrada com esse ID : " + id);
       }
       taskRepository.deleteById(id);
     } catch (ResourceNotFoundException e) {
       throw e;
     } catch (DataAccessException e) {
-      log.error("Error accessing database to delete task", e);
-      throw new OperationException("Error searching for tasks! Contact Developer or IT Support.", e);
+      log.error("Erro ao acessar o banco de dados para listar tarefas", e);
+      throw new OperationException("Erro ao procurar tarefas! Entre em contato com o desenvolvedor ou o suporte de TI.",
+          e);
     } catch (Exception e) {
       log.error("Unexpected error", e);
-      throw new OperationException("Error deleting task! Contact Developer or IT Support", e);
+      throw new OperationException("Erro ao procurar tarefas! Entre em contato com o desenvolvedor ou o suporte de TI.",
+          e);
     }
   }
 }

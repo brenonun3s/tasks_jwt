@@ -19,15 +19,15 @@ public class GlobalExceptionHandler {
   public ResponseEntity<Object> handleValidationException(MethodArgumentNotValidException ex) {
     List<Map<String, String>> errors = ex.getBindingResult().getFieldErrors().stream().map(error -> {
       Map<String, String> err = new HashMap<>();
-      err.put("field", error.getField());
-      err.put("message", error.getDefaultMessage());
+      err.put("Campo", error.getField());
+      err.put("Mensagem", error.getDefaultMessage());
       return err;
     }).collect(Collectors.toList());
 
     Map<String, Object> response = new HashMap<>();
-    response.put("status", HttpStatus.BAD_REQUEST.value());
-    response.put("timestamp", LocalDateTime.now());
-    response.put("errors", errors);
+    response.put("Status", HttpStatus.BAD_REQUEST.value());
+    response.put("Timestamp", LocalDateTime.now());
+    response.put("Erros:", errors);
 
     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
   }
@@ -35,9 +35,9 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(ResourceNotFoundException.class)
   public ResponseEntity<Object> handleNotFound(ResourceNotFoundException ex) {
     Map<String, Object> response = new HashMap<>();
-    response.put("status", HttpStatus.NOT_FOUND.value());
-    response.put("timestamp", LocalDateTime.now());
-    response.put("message", ex.getMessage());
+    response.put("Status", HttpStatus.NOT_FOUND.value());
+    response.put("Timestamp", LocalDateTime.now());
+    response.put("Mensagem", ex.getMessage());
 
     return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
   }
@@ -45,9 +45,9 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(OperationException.class)
   public ResponseEntity<Object> handleOperacao(OperationException ex) {
       Map<String, Object> response = new HashMap<>();
-      response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-      response.put("timestamp", LocalDateTime.now());
-      response.put("message", "Internal error: " + ex.getMessage());
+      response.put("Status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+      response.put("Timestamp", LocalDateTime.now());
+      response.put("Mensagem", "Internal error: " + ex.getMessage());
   
       return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
   }

@@ -4,22 +4,27 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record TaskDTO(
- @NotBlank(message = "Field Title of Task is required")
- @Size(min = 5, max = 50, message = "The title must be between 5 and 50 characters long.")
+
+ @Schema(description = "Titulo da tarefa", example = "Estudar")
+ @NotBlank(message = "Campo Titulo da Tarefa é obrigatório")
+ @Size(min = 5, max = 50, message = "O titulo deve ser entre 5 (mínimo) a 50 (máximo) de caracteres")
  String title, 
  
- @NotBlank(message = "Field Description of Task is required")
- @Size(min = 5, max = 150, message = "The description must be between 5 and 150 characters long.")
+ @Schema(description = "Descrição da Tarefa", example = "Estudar para a prova de Java")
+ @NotBlank(message = "Campo Descrição da Tarefa é obrigatório")
+ @Size(min = 5, max = 150, message = "A descrição deve ser entre 5 (mínimo) a 150 (máximo) de caracteres")
  String description, 
  
- @FutureOrPresent(message = "Field Due Date only accepts data in the present or future")
- @NotNull(message = "Due date is required")
+ @Schema(description = "Data de Vencimento da tarefa", example = "07/09/2025")
+ @FutureOrPresent(message = "Campo Data de Vencimento aceita apenas data do presente ou futuro, datas passadas são inválidas")
+ @NotNull(message = "Campo Data de Vencimento é obrigatório")
  @JsonFormat(pattern = "dd-MM-yyyy")
  LocalDate dueDate) {
  

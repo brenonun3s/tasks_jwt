@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
 
   public UserResponseDTO register(UserRegisterDTO dto) {
     if (userRepository.existsByEmail(dto.email())) {
-      throw new EmailAlreadyExistsException("Email already in use");
+      throw new EmailAlreadyExistsException("Email já está em uso!");
     }
 
     User user = userMapper.toEntity(dto);
@@ -45,7 +45,7 @@ public class UserService implements UserDetailsService {
       return jwtUtil.generateToken(dto.email());
 
     }
-    throw new RuntimeException("Invalid credentials");
+    throw new RuntimeException("Credenciais Inválidas");
   }
 
   public String refreshToken(String tokenAntigo) {
@@ -56,12 +56,11 @@ public class UserService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        .orElseThrow(() -> new UsernameNotFoundException("Usuário não cadastrado/ localizado!"));
 
     return org.springframework.security.core.userdetails.User
         .withUsername(user.getEmail())
         .password(user.getPassword())
-        .roles("USER")
         .build();
   }
 }

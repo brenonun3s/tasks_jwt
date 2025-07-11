@@ -22,7 +22,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
         )
     ),
     servers = {
-        @Server(url = "http://localhost:8080", description = "Desenvolvimento local")
+        @Server(url = "http://localhost:8080", description = "Desenvolvimento local"),
+        @Server(url = "https://tasks-jwt.onrender.com/swagger-ui/index.html", description = "Ambiente de Produção")
     }
 )
 public class OpenApiConfig {

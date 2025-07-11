@@ -22,7 +22,14 @@ Este projeto é uma API REST desenvolvida com **Spring Boot**, que permite o ger
 - JWT
 - H2 Database (desenvolvimento)
 - Swagger / OpenAPI
+- Mapstruct
+- PostgreSQL
+- Flyway
+- Dockerfile
+- Render (deploy do Webservice)
+- Supabase (deploy do banco de dados de produção)
 
+  
 ### 🔑 Endpoints principais
 
 - `POST /auth/register` — Registrar novo usuário
@@ -58,6 +65,12 @@ This is a RESTful API built with **Spring Boot** for managing tasks with **JWT-b
 - JWT
 - H2 Database (for development)
 - Swagger / OpenAPI
+- Mapstruct
+- PostgreSQL
+- Flyway
+- Dockerfile
+- Render (deploy the production Webservice)
+- Supabase (deploy the production database)
 
 ### 🔑 Main Endpoints
 

@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
         contact = @Contact(
             name = "Breno Nunes",
             email = "morais.brenonunes@hotmail.com",
-            url = "https://github.com/brenonun3s"
+            url = "https://portfolio-brenonunes.vercel.app/"
         ),
         license = @License(
             name = "MIT License",
